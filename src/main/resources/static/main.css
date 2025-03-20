@@ -81,6 +81,21 @@ input:disabled {
     animation: spin 5s cubic-bezier(.71,1,.45,.13) infinite;
 }
 
+.markdown-alert {
+    background: #fff;
+    font-family: Montserrat, sans-serif;
+    color: #009688;
+    padding: 20px;
+    box-shadow:
+            inset #009688 0 0 0 1px,
+            inset #059c8e 0 0 0 2px,
+            inset #0cab9c 0 0 0 3px,
+            inset #1fbdae 0 0 0 4px,
+            inset #8ce9ff 0 0 0 5px,
+            inset #48e4d6 0 0 0 6px,
+            inset #e5f9f7 0 0 0 7px,
+            inset #bfecf7 0 0 0 8px;
+}
 
 /*.testBorder::after {*/
 /*    content: "";*/

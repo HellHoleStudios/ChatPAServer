@@ -68,6 +68,15 @@ object ModelSocketManager {
         }
     }
 
+    fun buildSourceDocumentMarkdown(s: ArrayList<String>):String{
+        return """
+            > [!TIP]
+            > **参考文献**
+            >
+            > ${s.joinToString()}
+        """.trimIndent()
+    }
+
     suspend fun receiveLoop() {
         try {
             receiving = true
@@ -98,6 +107,11 @@ object ModelSocketManager {
                         s.status = RequestSession.RequestStatus.ENDED
                         s.endTime = System.currentTimeMillis()
                         StatisticManager.recordWaitTime(s.endTime-s.startTime)
+
+                        //a hack to send the source documents
+                        val sourceDoc="\n"+buildSourceDocumentMarkdown(ret.source)
+                        s.answer+=sourceDoc
+                        s.send(Frame.Text("T$sourceDoc"))
 
                         //push to history
                         HistoryManager.appendHistory(ret.token, UserHistory("bot", s.answer, System.currentTimeMillis()))
