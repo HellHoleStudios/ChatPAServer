@@ -8,10 +8,11 @@
     <title>${pageTitle}</title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"></script>
     <link rel="stylesheet" href="/static/main.css">
+
 </head>
 <body>
 <div class="ui container">
@@ -34,7 +35,7 @@
     </nav>
 </div>
 
-<main class="ui container" style="margin: 20px;">
+<main class="ui container" style="margin-top: 20px; margin-bottom: 20px;">
     <#-- This is where the content of the specific page will be inserted -->
     <div class="ui segment">
         <h1>${pageTitle}</h1>

@@ -97,7 +97,7 @@
         //get url by replacing http with ws
         let markdown = "";
         let url = window.location.href.replace("http", "ws");
-        let ws = new WebSocket(url);
+        let ws = new WebSocket(url.replace('#',''));
         ws.onopen = function () {
             //TODO: add a loading animation
             loading.hide();
