@@ -32,6 +32,26 @@
 
     <script>
 
+        const { Marked } = globalThis.marked;
+        const { markedHighlight } = globalThis.markedHighlight;
+        const marked = new Marked(
+            markedHighlight({
+                emptyLangClass: 'hljs',
+                langPrefix: 'hljs language-',
+                highlight(code, lang, info) {
+                    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+                    return hljs.highlight(code, { language }).value;
+                }
+            })
+        );
+        marked.use(markedAlert())
+
+        // const options = {
+        //     throwOnError: false,
+        //     nonStandard: true
+        // };
+        // marked.use(markedKatex(options));
+
         function clearHistory(){
             $.post("/clearHistory",function(){
                 $('#comments').html('');
