@@ -1,0 +1,146 @@
+
+.crab {
+    transition: transform 0.5s;
+}
+
+.crab:hover{
+    transform: rotateY(540deg);
+}
+
+.doSlide{
+    animation: slideIn 0.5s;
+}
+
+.upItem{
+    animation: slideUpIn 0.5s forwards;
+    opacity: 0;
+}
+
+.upItem:nth-child(1){
+    animation-delay: 0.1s;
+}
+
+.upItem:nth-child(2){
+    animation-delay: 0.2s;
+}
+
+.upItem:nth-child(3){
+    animation-delay: 0.3s;
+}
+
+.upItem:nth-child(4){
+    animation-delay: 0.4s;
+}
+
+.upItem:nth-child(5){
+    animation-delay: 0.4s;
+}
+
+.segment{
+    animation: slideUpInCooler 0.5s forwards;
+    opacity: 0;
+}
+
+.segment:nth-child(1){
+    animation-delay: 0.1s;
+}
+
+.segment:nth-child(2){
+    animation-delay: 0.2s;
+}
+
+.segment:nth-child(3){
+    animation-delay: 0.3s;
+}
+
+.segment:nth-child(4){
+    animation-delay: 0.4s;
+}
+
+.segment:nth-child(5){
+    animation-delay: 0.5s;
+}
+
+input:disabled {
+    opacity: 1 !important; /* Reset opacity */
+    color: gray !important;
+}
+
+.testBorder::before {
+    content: "";
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    border-radius: 8px;
+    background-image: conic-gradient(
+            from var(--rotate)
+            , red, orange, yellow, green, cyan, blue, violet, red);
+    position: absolute;filter: blur(8px);
+    z-index: -1;
+    top: -4px;
+    left: -4px;
+    animation: spin 5s cubic-bezier(.71,1,.45,.13) infinite;
+}
+
+
+/*.testBorder::after {*/
+/*    content: "";*/
+/*    width: calc(100% + 16px);*/
+/*    height: calc(100% + 16px);*/
+/*    border-radius: 16px;*/
+/*    background-image: conic-gradient(*/
+/*            from var(--rotate)*/
+/*            , red, orange, yellow, green, cyan, blue, violet, red);*/
+/*    position: absolute;*/
+/*    filter: blur(8px);*/
+/*    z-index: -1;*/
+/*    top: -8px;*/
+/*    left: -8px;*/
+/*    animation: spin 2.5s cubic-bezier(.71,1,.45,.13) infinite;*/
+/*}*/
+
+@property --rotate {
+    syntax: "<angle>";
+    initial-value: 132deg;
+    inherits: false;
+}
+
+@keyframes spin {
+    0% {
+        --rotate: 0deg;
+    }
+    100% {
+        --rotate: 360deg;
+    }
+}
+
+@keyframes slideUpInCooler {
+    0%{
+        transform: scale(1.05);
+        opacity: 0;
+    }
+    100%{
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideUpIn {
+    0%{
+        transform: translateY(20%) ;
+        opacity: 0;
+    }
+    100%{
+        transform: translateY(0) ;
+        opacity: 1;
+    }
+}
+@keyframes slideIn {
+    0%{
+        transform: translateX(100%) rotateX(90deg);
+        opacity: 0;
+    }
+    100%{
+        transform: translateX(0) rotateX(0deg);
+        opacity: 1;
+    }
+}
