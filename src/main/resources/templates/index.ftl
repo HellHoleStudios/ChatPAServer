@@ -155,6 +155,13 @@
                 inputField.parent().removeClass('testBorder');
 
                 addComment("bot",new Date().toLocaleString(),marked.parse(markdown));
+
+                //scroll to answer
+                setTimeout(()=>{
+                    inputField[0].scrollIntoView({behavior: 'smooth',
+                        block: 'nearest'})
+                },1);
+
             }else if(s[0]==='l'){
                 //last question
                 inputField.attr('disabled','1');
