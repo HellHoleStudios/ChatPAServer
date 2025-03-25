@@ -7,6 +7,7 @@ import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.serialization.kotlinx.*
 import io.ktor.server.application.*
 import io.ktor.server.websocket.*
+import io.ktor.util.logging.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
@@ -23,6 +24,7 @@ object ModelSocketManager {
 
     var receiving = false
 
+    lateinit var logger: Logger
     fun initApplication(application: Application) {
         modelHost = application.environment.config.property("model.host").getString()
         modelPort = application.environment.config.property("model.port").getString()
@@ -33,6 +35,7 @@ object ModelSocketManager {
             }
         }
 
+        this.logger=application.log
     }
 
     suspend fun initConnection() {
@@ -42,14 +45,14 @@ object ModelSocketManager {
     /**
      * Saves a new user session associated with a token
      *
-     * Also send initial data (chat history, partial response and last summary )to the user
+     * Also send initial data (chat history, partial response and last summary) to the user
      */
     suspend fun registerSession(token: String, session: DefaultWebSocketServerSession) {
 
         if (token !in sessionRegisters) {
             sessionRegisters[token] = RequestSession(session)
 
-            println("Registered session for token '$token' with session $session")
+            logger.debug("Registered session for token '{}' with session {}", token, session)
         } else {
             try {
                 val s= sessionRegisters[token]!!
@@ -71,9 +74,10 @@ object ModelSocketManager {
                 if(s.lastSummary!=""){
                     session.send(Frame.Text("s"+s.lastSummary))
                 }
-                println("Refreshed session for token '$token' with session $session")
-            } catch (_: Exception) {
 
+                logger.debug("Refreshed session for token '{}' with session {}", token, session)
+            } catch (e: Exception) {
+                logger.warn("Cannot refresh session for token '{}' with session {}", token, session)
             }
         }
     }
@@ -90,15 +94,16 @@ object ModelSocketManager {
     suspend fun receiveLoop() {
         try {
             receiving = true
-            println("Keep the loop rolling!!!")
+
+            logger.info("Keep the loop rolling!!!")
             while (true) {
                 val ret = session.receiveDeserialized<ModelReturnProtocol>()
-                println("Received message: $ret to '${ret.token}' session= ${sessionRegisters[ret.token]}")
+                logger.debug("Received message: {} to '{}' session= {}", ret, ret.token, sessionRegisters[ret.token])
 
                 val s = sessionRegisters[ret.token]
 
                 if(s==null){
-                    println("Session is null?")
+                    logger.warn("Session is null?")
                     continue
                 }
 
@@ -141,16 +146,18 @@ object ModelSocketManager {
                     if(s.status!=RequestSession.RequestStatus.ENDED){
                         s.status = RequestSession.RequestStatus.LOST
                     }
-                    println("Cannot send message to client: $e. Well, screw that, nobody cares ┑(￣Д ￣)┍")
+
+                    logger.debug("Cannot send message to client: $e. Well, screw that, nobody cares ┑(￣Д ￣)┍")
                 }
             }
         } catch (e: Exception) {
             receiving = false
-            println("Cannot keep it rolling anymore TAT!!!")
-            e.printStackTrace()
+
+            logger.error("Cannot keep it rolling anymore TAT!!!",e)
         } finally {
             receiving = false
-            println("Somehow terminated?!?!?")
+
+            logger.error("Somehow terminated?~")
         }
     }
 
@@ -158,7 +165,8 @@ object ModelSocketManager {
      * Use new request instead
      */
     private suspend fun sendSerialized(message: ModelSendProtocol) {
-        println("Sending message: $message")
+        logger.debug("Sending message: {}", message)
+
         session.sendSerialized(message)
     }
 
@@ -166,7 +174,8 @@ object ModelSocketManager {
      * Use new request instead
      */
     private suspend fun sendSerialized(message: ModelSummaryProtocol) {
-        println("Sending summary: $message")
+        logger.debug("Sending summary: {}", message)
+
         session.sendSerialized(message)
     }
 

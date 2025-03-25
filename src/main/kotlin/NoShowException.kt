@@ -1,9 +1,9 @@
 package top.hhs.xgn
 
 /**
- * An exception that should not be displayed to the user
+ * An exception that does not show name to the frontend when thrown.
  *
- * Usually used as intended
+ * It is used to trigger a frontend error page manually
  */
 class NoShowException:RuntimeException {
     constructor():super()

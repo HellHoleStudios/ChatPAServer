@@ -1,5 +1,6 @@
 package top.hhs.xgn
 
+import io.ktor.server.application.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.csv.Csv
@@ -14,11 +15,13 @@ object TokenManager {
     val tokens = HashMap<String,String>()
 
     @OptIn(ExperimentalSerializationApi::class)
-    fun reloadTokens(){
+    fun reloadTokens(app: Application){
 
-        println("Please wait, loading tokens.csv...")
+        app.log.info("Loading tokens.csv...")
+
         val csvFile = File("tokens.csv")
-        println("Raw content: ${csvFile.readText()}")
+
+        app.log.debug("Raw content: ${csvFile.readText()}")
 
         // Create a Csv instance
         val csv = Csv {
@@ -31,7 +34,7 @@ object TokenManager {
         for(i in rows){
             tokens[i.Token]=i.Name
 
-            println("Loaded token for ${i.Name}: ${i.Token}")
+            app.log.info("Loaded token for ${i.Name}: ${i.Token}")
         }
     }
 }

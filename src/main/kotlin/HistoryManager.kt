@@ -7,6 +7,10 @@ import java.io.File
 object HistoryManager {
 
     val cache = HashMap<String, ArrayList<UserHistory>>()
+
+    /**
+     * Get the user history from the cache or the disk.
+     */
     fun getUserHistory(token: String): ArrayList<UserHistory> {
         if (token in cache) {
             return cache[token]!!
@@ -22,6 +26,9 @@ object HistoryManager {
         return cache[token]!!
     }
 
+    /**
+     * Append a history to the user's history.
+     */
     fun appendHistory(token: String, message: UserHistory) {
         val his = getUserHistory(token)
         his.add(message)
@@ -34,12 +41,16 @@ object HistoryManager {
         file.writeText(Json.encodeToString(his))
     }
 
+    /**
+     * Clear the user's history both in cache and disk.
+     */
     fun clearHistory(token: String) {
         cache.remove(token)
         val file=File("history/$token.json")
         file.delete()
     }
 
+    //TODO: config this
     const val USER_HISTORY_SIZE_THRESHOLD = 10
 
 }

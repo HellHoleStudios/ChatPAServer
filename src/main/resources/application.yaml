@@ -5,13 +5,14 @@ ktor:
     deployment:
         port: 8080
 
-    development: false
+    development: true
 
 model:
-    host: "localhost"
+    host: "116.62.110.110"
     port: "8501"
 
 token:
     admin: "admin"
+
 prometheus:
     port: 8081

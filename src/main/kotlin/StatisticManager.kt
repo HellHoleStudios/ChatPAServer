@@ -27,9 +27,9 @@ object StatisticManager {
         eventDuration?.observe(waitTime/1000.0)
     }
 
-    fun init() {
+    fun init(app: Application) {
 
-        println("Init Statistic Manager")
+        app.log.info("Init Statistic Manager")
 
         JvmMetrics.builder().register() // initialize the out-of-the-box JVM metrics
 
@@ -57,7 +57,7 @@ object StatisticManager {
         server = HTTPServer.builder()
             .port(app.environment.config.property("prometheus.port").getString().toInt())
             .buildAndStart()
-        println("HTTPServer listening on port http://localhost:" + server?.port + "/metrics")
+        app.log.info("Statistic HTTPServer listening on port http://localhost:" + server?.port + "/metrics")
 
     }
 

@@ -23,6 +23,7 @@ import java.io.File
 
 fun Application.configureSecurity() {
     install(Sessions) {
+        //TODO: config this
         val secretEncryptKey = hex("1145141919810acceedd00ffacdefdde")
         val secretSignKey = hex("99824435319260817fffffeeabc91723")
         cookie<UserSession>("user_session", directorySessionStorage(File(".sessions"), cached = true)) {
@@ -30,6 +31,7 @@ fun Application.configureSecurity() {
             transform(SessionTransportTransformerEncrypt(secretEncryptKey, secretSignKey))
         }
     }
+
     install(Authentication){
         session<UserSession>("token"){
             challenge {
@@ -52,15 +54,6 @@ fun Application.configureSecurity() {
             }
         }
     }
-//    install(CSRF) {
-//        // tests Origin is an expected value
-//        allowOrigin("http://localhost:8080")
-//
-//        // tests Origin matches Host header
-//        originMatchesHost()
-//
-//        // custom header checks
-//        checkHeader("X-CSRF-Token")
-//    }
 
+    //TODO: CSRF
 }

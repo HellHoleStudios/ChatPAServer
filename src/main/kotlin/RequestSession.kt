@@ -5,7 +5,6 @@ import io.ktor.websocket.*
 
 /**
  * A class to store the session of a request used in [ModelSocketManager]
- *
  */
 class RequestSession(var session: DefaultWebSocketServerSession) {
     suspend fun close(closeReason: CloseReason) {
@@ -27,7 +26,14 @@ class RequestSession(var session: DefaultWebSocketServerSession) {
     var lastQuestion = ""
     var answer = ""
     var status = RequestStatus.NO_QUESTION
+
+    /**
+     * Start time of last query
+     */
     var startTime: Long = -1
+    /**
+     * Finish time of last query
+     */
     var endTime: Long = -1
 
     /**

@@ -30,6 +30,7 @@ fun Application.configureSockets() {
         masking = false
         contentConverter = KotlinxWebsocketSerializationConverter(Json)
     }
+
     routing {
         authenticate("token") {
             webSocket("/") { // websocketSession
@@ -45,7 +46,7 @@ fun Application.configureSockets() {
                     if (frame is Frame.Text) {
                         val text = frame.readText()
 
-                        println("Received: $text from $username with token $token")
+                        log.debug("Received: $text from $username with token $token")
 
                         //TODO this might not work when user refresh, fix it later
                         val newTime = System.currentTimeMillis()
@@ -74,6 +75,8 @@ fun Application.configureSockets() {
                                 close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "禁止双开(╯‵□′)╯︵┻━┻"))
                             }
                         }
+
+                        //Test code below
 //                        delay(2000)
 //                        outgoing.send(Frame.Text("S"))
 //                        for(i in 0..100){

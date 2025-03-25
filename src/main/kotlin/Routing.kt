@@ -55,8 +55,6 @@ fun Application.configureRouting() {
                 return@exception
             }
             call.respond(FreeMarkerContent("error.ftl", getObjectMapWithSession(call.sessions.get<UserSession>()).also { it["error"]="Internal Server Error: $cause" }))
-//            call.respondText(text = "500: $cause" , status = HttpStatusCode.InternalServerError)
-            cause.printStackTrace()
         }
     }
 
@@ -67,7 +65,8 @@ fun Application.configureRouting() {
         authenticate("token") {
             get("/") {
                 if(self.getConfig("ktor.development").toBoolean()){
-                    TokenManager.reloadTokens()
+                    TokenManager.reloadTokens(self)
+                    ModelSocketManager.logger=self.log
                 }
 
                 call.respond(FreeMarkerContent("index.ftl", getObjectMap()))
@@ -77,18 +76,17 @@ fun Application.configureRouting() {
                 HistoryManager.clearHistory(call.getToken()!!)
                 call.respond("OK")
             }
-
         }
 
 
         authenticate("admin") {
             get("/gc"){
                 System.gc()
-                call.respond("gced")
+                call.respond("GCed")
             }
             get("/rs"){
                 ModelSocketManager.sessionRegisters.clear()
-                call.respond("rsed")
+                call.respond("RSed")
             }
 
             get("/session"){
@@ -122,7 +120,7 @@ fun Application.configureRouting() {
 
                             part.provider().copyAndClose(file.writeChannel())
 
-                            TokenManager.reloadTokens()
+                            TokenManager.reloadTokens(self)
                         }
 
                         else -> {}
@@ -134,8 +132,8 @@ fun Application.configureRouting() {
             }
 
             get("/inits"){
-                println("Init statistics server...")
-                StatisticManager.init()
+                log.info("Init statistics server...")
+                StatisticManager.init(self)
                 StatisticManager.startServer(self)
 
                 call.respond("OK")
@@ -145,10 +143,9 @@ fun Application.configureRouting() {
 
                 if(ModelSocketManager.receiving){
                     throw NoShowException("连接已经打开，无须再次启动")
-                    return@get
                 }
 
-                println("Init Model Sockets...")
+                log.info("Init Model Sockets...")
                 ModelSocketManager.initApplication(self)
                 ModelSocketManager.initConnection()
 
@@ -163,7 +160,7 @@ fun Application.configureRouting() {
         get("/login"){
 
             if(self.getConfig("ktor.development").toBoolean()){
-                TokenManager.reloadTokens()
+                TokenManager.reloadTokens(self)
             }
 
             call.respond(FreeMarkerContent("login.ftl",getObjectMap()))
