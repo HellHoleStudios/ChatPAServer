@@ -25,6 +25,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css">
     <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
 
+    <!-- MarkMap -->
+    <script src="https://cdn.jsdelivr.net/npm/markmap-lib"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markmap-view"></script>
+    <script>
+        const { Transformer } = window.markmap;
+        const { markmap } = window;
+        const { Markmap, loadCSS, loadJS } = markmap;
+    </script>
+
+    <!-- Our CSS -->
     <link rel="stylesheet" href="/static/main.css">
 
 </head>

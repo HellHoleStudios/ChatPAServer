@@ -5,10 +5,10 @@ ktor:
     deployment:
         port: 8080
 
-    development: true
+    development: false
 
 model:
-    host: "116.62.110.110"
+    host: "localhost"
     port: "8501"
 
 token:

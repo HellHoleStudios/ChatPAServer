@@ -84,6 +84,11 @@ fun Application.configureRouting() {
         authenticate("admin") {
             get("/gc"){
                 System.gc()
+                call.respond("gced")
+            }
+            get("/rs"){
+                ModelSocketManager.sessionRegisters.clear()
+                call.respond("rsed")
             }
 
             get("/session"){

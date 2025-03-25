@@ -4,6 +4,30 @@
 
 
     <button class="ui red button" onclick="clearHistory()">删除历史记录</button>
+
+    <div class="ui accordion">
+        <div class="title">
+            <i class="dropdown icon"></i>
+            对话总结
+        </div>
+        <div class="content">
+            <div class="ui segment no-animation">
+                <div class="ui segment no-animation">
+                    <button class="ui primary button" onclick="generateSummary()">生成报告</button>
+                    <button class="ui green button" onclick="parseSummary()">查看报告</button>
+                    <p id="no_summary_prompt">您还没有生成过报告，请点击上方按钮以授权使用您的对话历史记录生成一个报告。</p>
+                </div>
+                <div class="ui segment no-animation" id="summary_prompt">
+                    报告已经准备就绪，请按上方按钮查看报告。
+                    <div class="ui active dimmer" id="summary_dimmer">
+                        <div class="ui text loader">请稍等，生成报告大概需要1分钟时间……</div>
+                    </div>
+                    <svg id="markmap" style="width: 100%;height:500px;"></svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="ui comments" id="comments">
 
     </div>
@@ -31,6 +55,13 @@
 
 
     <script>
+        $('.ui.accordion')
+            .accordion()
+        ;
+        $('#summary_prompt').hide();
+
+        let summaryMD=""
+        let manualSummary=false;
 
         const { Marked } = globalThis.marked;
         const { markedHighlight } = globalThis.markedHighlight;
@@ -62,6 +93,41 @@
                     class: 'success',
                 });
             });
+        }
+
+        function generateSummary(){
+            ws.send("$$");
+            manualSummary=true;
+            $('#summary_dimmer').addClass('active');
+            $('#no_summary_prompt').hide();
+            $('#summary_prompt').show();
+        }
+
+        function parseSummary(){
+            if(summaryMD===""){
+                $.toast({
+                    title: '无法显示报告',
+                    message: '您还没有生成过报告，请先生成报告。',
+                    showProgress: 'bottom',
+                    class: 'warning',
+                });
+                return;
+            }
+
+            let md=summaryMD;
+
+            // No plugin at all
+            const transformer = new Transformer();
+
+            // 1. transform Markdown
+            const { root, features } = transformer.transform(md);
+
+            // or get all possible assets that could be used later
+            const assets = transformer.getAssets();
+
+            $('#markmap').empty();
+            Markmap.create('#markmap', undefined, root); // -> returns a Markmap instance
+
         }
 
         function addComment(image, time, text){
@@ -130,8 +196,16 @@
 
         ws.onclose=function(event){
             inputField.parent().removeClass('testBorder');
-            error_text.text(event.reason!=="" ? event.reason : "无")
+            error_text.text(event.reason!=="" ? event.reason : "未知原因");
             dia.show();
+
+            $.toast({
+                title: '连接已断开',
+                message: '由于'+(event.reason!=="" ? event.reason : "未知原因")+'，与服务器的连接已经断开，请刷新网站。',
+                showProgress: 'bottom',
+                class: 'error',
+                timeout: 10
+            });
         }
 
         ws.onmessage = function (event) {
@@ -175,6 +249,21 @@
             }else if(s[0]==='H'){
                 let content=JSON.parse(s.substring(1));
                 addComment(content.role, new Date(content.time).toLocaleString(), marked.parse(content.content));
+            }else if(s[0]==='s'){
+                $('#summary_dimmer').removeClass('active');
+                summaryMD=s.substring(1);
+
+                if(manualSummary){
+                    $.toast({
+                        title: '报告已生成',
+                        message: '您的对话报告已经生成，请点击查看报告按钮查看。',
+                        showProgress: 'bottom',
+                        class: 'success',
+                    });
+                    manualSummary=false;
+                }
+                $('#no_summary_prompt').hide();
+                $('#summary_prompt').show();
             }
         };
     </script>

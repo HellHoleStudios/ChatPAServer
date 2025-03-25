@@ -13,6 +13,7 @@ fun Application.module() {
     //setup websocket first
 //    ModelSocketManager.initApplication(this)
 //    ModelSocketManager.initConnection()
+    TokenManager.reloadTokens()
 
     configureSecurity()
     configureSockets()

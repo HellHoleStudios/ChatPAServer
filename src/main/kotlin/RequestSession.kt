@@ -29,4 +29,10 @@ class RequestSession(var session: DefaultWebSocketServerSession) {
     var status = RequestStatus.NO_QUESTION
     var startTime: Long = -1
     var endTime: Long = -1
+
+    /**
+     * Whether the user has requested a summary
+     */
+    var summaryLock: Boolean = false
+    var lastSummary = ""
 }

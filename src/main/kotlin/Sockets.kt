@@ -55,9 +55,24 @@ fun Application.configureSockets() {
                         }
                         lastQuery=newTime
 
-                        val ans=ModelSocketManager.sendRequest(ModelSendProtocol(text,token,username, HistoryManager.getUserHistory(token)))
-                        if(!ans){
-                            close(CloseReason(CloseReason.Codes.VIOLATED_POLICY,"禁止双开(╯‵□′)╯︵┻━┻"))
+                        if(text=="$$"){
+                            //consider this as a summary request
+                            val ans=ModelSocketManager.sendSummaryRequest(token)
+                            if(!ans){
+                                close(CloseReason(CloseReason.Codes.VIOLATED_POLICY,"禁止双开(╯‵□′)╯︵┻━┻"))
+                            }
+                        }else {
+                            val ans = ModelSocketManager.sendRequest(
+                                ModelSendProtocol(
+                                    text,
+                                    token,
+                                    username,
+                                    HistoryManager.getUserHistory(token)
+                                )
+                            )
+                            if (!ans) {
+                                close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "禁止双开(╯‵□′)╯︵┻━┻"))
+                            }
                         }
 //                        delay(2000)
 //                        outgoing.send(Frame.Text("S"))

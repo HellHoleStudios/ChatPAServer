@@ -15,7 +15,10 @@ object TokenManager {
 
     @OptIn(ExperimentalSerializationApi::class)
     fun reloadTokens(){
+
+        println("Please wait, loading tokens.csv...")
         val csvFile = File("tokens.csv")
+        println("Raw content: ${csvFile.readText()}")
 
         // Create a Csv instance
         val csv = Csv {

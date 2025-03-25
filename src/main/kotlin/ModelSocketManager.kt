@@ -39,6 +39,11 @@ object ModelSocketManager {
         session = client.webSocketSession(host = modelHost, port = modelPort.toInt())
     }
 
+    /**
+     * Saves a new user session associated with a token
+     *
+     * Also send initial data (chat history, partial response and last summary )to the user
+     */
     suspend fun registerSession(token: String, session: DefaultWebSocketServerSession) {
 
         if (token !in sessionRegisters) {
@@ -61,6 +66,11 @@ object ModelSocketManager {
                     session.send(Frame.Text("l" + s.lastQuestion))
                     session.send(Frame.Text("L" + s.answer))
                 }
+
+                //send last summary (unused)
+                if(s.lastSummary!=""){
+                    session.send(Frame.Text("s"+s.lastSummary))
+                }
                 println("Refreshed session for token '$token' with session $session")
             } catch (_: Exception) {
 
@@ -68,7 +78,7 @@ object ModelSocketManager {
         }
     }
 
-    fun buildSourceDocumentMarkdown(s: ArrayList<String>):String{
+    private fun buildSourceDocumentMarkdown(s: ArrayList<String>):String{
         return """
             > [!TIP]
             > **参考文献**
@@ -106,17 +116,24 @@ object ModelSocketManager {
                     } else if (ret.type == "GEN_FINISHED") {
                         s.status = RequestSession.RequestStatus.ENDED
                         s.endTime = System.currentTimeMillis()
-                        StatisticManager.recordWaitTime(s.endTime-s.startTime)
+                        StatisticManager.recordWaitTime(s.endTime - s.startTime)
 
                         //a hack to send the source documents
-                        val sourceDoc="\n"+buildSourceDocumentMarkdown(ret.source)
-                        s.answer+=sourceDoc
+                        val sourceDoc = "\n" + buildSourceDocumentMarkdown(ret.source)
+                        s.answer += sourceDoc
                         s.send(Frame.Text("T$sourceDoc"))
 
                         //push to history
-                        HistoryManager.appendHistory(ret.token, UserHistory("bot", s.answer, System.currentTimeMillis()))
+                        HistoryManager.appendHistory(
+                            ret.token,
+                            UserHistory("bot", s.answer, System.currentTimeMillis())
+                        )
 
                         s.send(Frame.Text("E"))
+                    }else if(ret.type=="SUMMARY"){
+                        s.summaryLock=false
+                        s.lastSummary=ret.content
+                        s.send(Frame.Text("s"+ret.content))
                     } else {
                         throw RuntimeException("Unknown message type from model host: ${ret.type}")
                     }
@@ -146,7 +163,35 @@ object ModelSocketManager {
     }
 
     /**
+     * Use new request instead
+     */
+    private suspend fun sendSerialized(message: ModelSummaryProtocol) {
+        println("Sending summary: $message")
+        session.sendSerialized(message)
+    }
+
+    /**
+     * Send a summary request to the model side
+     *
+     * @return whether the request is accepted
+     */
+    suspend fun sendSummaryRequest(token: String):Boolean{
+        val s= sessionRegisters[token] ?: return false
+
+        if(s.summaryLock){
+            return false
+        }
+
+        s.summaryLock=true
+        sendSerialized(ModelSummaryProtocol(true,token,HistoryManager.getUserHistory(token)))
+
+        return true
+    }
+
+    /**
      * Send a question to the model side
+     *
+     * @return whether the request is accepted
      */
     suspend fun sendRequest(message: ModelSendProtocol):Boolean {
         val s = sessionRegisters[message.token] ?: return false
