@@ -1,48 +1,25 @@
-# chatpa
+# ChatPA
 
-This project was created using the [Ktor Project Generator](https://start.ktor.io).
+运行方式：
+`java -jar chatpa.jar -config=application.yaml`
 
-Here are some useful links to get you started:
+启动后需要初始化和模型端的WS连接:
+登录管理员账号后，访问`/init`
 
-- [Ktor Documentation](https://ktor.io/docs/home.html)
-- [Ktor GitHub page](https://github.com/ktorio/ktor)
-- The [Ktor Slack chat](https://app.slack.com/client/T09229ZC6/C0A974TJ9). You'll need to [request an invite](https://surveys.jetbrains.com/s3/kotlin-slack-sign-up) to join.
+如果需要启用数据收集功能，需要初始化该功能 ：
+登录管理员账号后，访问`/inits`
 
-## Features
+如果模型端重启，需要重新连接模型端：
+登录管理员账号后，访问`/init`
 
-Here's a list of features included in this project:
+## 技术
+服务器框架是Ktor，与用户端和模型端连接是WebSocket。
 
-| Name                                                                   | Description                                                                        |
-| ------------------------------------------------------------------------|------------------------------------------------------------------------------------ |
-| [Routing](https://start.ktor.io/p/routing)                             | Provides a structured routing DSL                                                  |
-| [Authentication](https://start.ktor.io/p/auth)                         | Provides extension point for handling the Authorization header                     |
-| [WebSockets](https://start.ktor.io/p/ktor-websockets)                  | Adds WebSocket protocol support for bidirectional client connections               |
-| [Freemarker](https://start.ktor.io/p/freemarker)                       | Serves HTML content using Apache's FreeMarker template engine                      |
-| [Status Pages](https://start.ktor.io/p/status-pages)                   | Provides exception handling for routes                                             |
-| [Static Content](https://start.ktor.io/p/static-content)               | Serves static files from defined locations                                         |
-| [kotlinx.serialization](https://start.ktor.io/p/kotlinx-serialization) | Handles JSON serialization using kotlinx.serialization library                     |
-| [Content Negotiation](https://start.ktor.io/p/content-negotiation)     | Provides automatic content conversion according to Content-Type and Accept headers |
-| [Sessions](https://start.ktor.io/p/ktor-sessions)                      | Adds support for persistent sessions through cookies or headers                    |
-| [CSRF](https://start.ktor.io/p/csrf)                                   | Cross-site request forgery mitigation                                              |
+模板引擎是FreeMarker，前端UI是fomanticUI框架。
 
-## Building & Running
+序列化使用了kotlinx.serialization，没有数据库存储。
 
-To build or run the project, use one of the following tasks:
+数据收集为PrometheusClient。
 
-| Task                          | Description                                                          |
-| -------------------------------|---------------------------------------------------------------------- |
-| `./gradlew test`              | Run the tests                                                        |
-| `./gradlew build`             | Build everything                                                     |
-| `buildFatJar`                 | Build an executable JAR of the server with all dependencies included |
-| `buildImage`                  | Build the docker image to use with the fat JAR                       |
-| `publishImageToLocalRegistry` | Publish the docker image locally                                     |
-| `run`                         | Run the server                                                       |
-| `runDocker`                   | Run using the local docker image                                     |
-
-If the server starts successfully, you'll see the following output:
-
-```
-2024-12-04 14:32:45.584 [main] INFO  Application - Application started in 0.303 seconds.
-2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
-```
-
+## 代码导读
+![](structure.drawio.png)
