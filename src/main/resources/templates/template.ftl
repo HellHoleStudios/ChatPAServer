@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="AI Assistant for PA remastered">
-    <title>${pageTitle}</title>
+    <title>${pageTitle} - ChatCode</title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 
     <!-- Semantic -->
@@ -43,7 +43,7 @@
 <div class="ui container">
     <nav class="ui secondary pointing menu">
         <img src="/static/logo.png" alt="Logo" class="ui tiny image crab" onclick="$('.segment').toggleClass('testBorder')">
-        <h1 class="header item"><a href="/">PA问答系统</a></h1>
+        <h1 class="header item"><a href="/">ChatCode问答系统</a></h1>
         <div class="right menu">
             <a class="item upItem" href="/">问答</a>
             <a class="item upItem" href="#" onclick="window.open(location.protocol+'//'+location.hostname+':9090')">数据<i class="external alternate icon"></i></a>

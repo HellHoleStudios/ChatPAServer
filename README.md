@@ -1,4 +1,4 @@
-# ChatPA
+# ChatCodeServer
 
 运行方式：
 `java -jar chatpa.jar -config=application.yaml`
