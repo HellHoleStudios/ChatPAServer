@@ -1,7 +1,7 @@
 # ChatCodeServer
 
 运行方式：
-`java -jar chatpa.jar -config=application.yaml`
+`java -jar chatcode-all.jar -config=application.yaml`
 
 启动后需要初始化和模型端的WS连接:
 登录管理员账号后，访问`/init`
