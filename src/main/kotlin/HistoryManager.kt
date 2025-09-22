@@ -25,7 +25,7 @@ object HistoryManager {
             cache[token] = CopyOnWriteArrayList()
             return cache[token]!!
         }
-        cache[token] = Json.decodeFromString<CopyOnWriteArrayList<UserHistory>>(file.readText())
+        cache[token] = CopyOnWriteArrayList(Json.decodeFromString<ArrayList<UserHistory>>(file.readText()))
         return cache[token]!!
     }
 

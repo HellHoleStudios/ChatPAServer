@@ -51,7 +51,7 @@ object ModelSocketManager {
      */
     suspend fun registerSession(token: String, session: DefaultWebSocketServerSession) {
 
-        if (sessionRegisters.containsKey(token)) {
+        if (!sessionRegisters.containsKey(token)) {
             sessionRegisters[token] = RequestSession(session)
 
             logger.debug("Registered session for token '{}' with session {}", token, session)
@@ -79,7 +79,7 @@ object ModelSocketManager {
 
                 logger.debug("Refreshed session for token '{}' with session {}", token, session)
             } catch (e: Exception) {
-                logger.warn("Cannot refresh session for token '{}' with session {}", token, session)
+                logger.warn("Cannot refresh session for token '{}' with session {} {}", token, session, e)
             }
         }
     }
@@ -194,7 +194,7 @@ object ModelSocketManager {
         }
 
         s.summaryLock=true
-        sendSerialized(ModelSummaryProtocol(true,token,HistoryManager.getUserHistory(token)))
+        sendSerialized(ModelSummaryProtocol(true,token,HistoryManager.getUserHistory(token).toMutableList()))
 
         return true
     }

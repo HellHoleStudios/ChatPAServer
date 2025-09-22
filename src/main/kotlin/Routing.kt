@@ -179,7 +179,7 @@ fun Application.configureRouting() {
         }
 
         get("/logout"){
-            call.sessions.set(UserSession())
+            call.sessions.set<UserSession>(null)
             call.respondRedirect("/")
         }
 

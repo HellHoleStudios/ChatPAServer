@@ -68,7 +68,7 @@ fun Application.configureSockets() {
                                     text,
                                     token,
                                     username,
-                                    HistoryManager.getUserHistory(token)
+                                    HistoryManager.getUserHistory(token).toMutableList()
                                 )
                             )
                             if (!ans) {
