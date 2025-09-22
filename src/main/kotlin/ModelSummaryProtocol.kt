@@ -12,4 +12,4 @@ import kotlinx.serialization.Serializable
  * @see ModelSendProtocol
  */
 @Serializable
-data class ModelSummaryProtocol(val summary:Boolean, val token: String, val history: ArrayList<UserHistory>)
+data class ModelSummaryProtocol(val summary:Boolean, val token: String, val history: MutableList<UserHistory>)

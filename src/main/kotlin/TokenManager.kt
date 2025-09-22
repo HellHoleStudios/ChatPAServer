@@ -6,13 +6,14 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.csv.Csv
 import kotlinx.serialization.decodeFromString
 import java.io.File
+import java.util.concurrent.ConcurrentHashMap
 
 object TokenManager {
 
     @Serializable
     data class CsvRow(val Name: String, val Token: String)
 
-    val tokens = HashMap<String,String>()
+    val tokens = ConcurrentHashMap<String, String>()
 
     @OptIn(ExperimentalSerializationApi::class)
     fun reloadTokens(app: Application){

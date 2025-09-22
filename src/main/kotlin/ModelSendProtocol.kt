@@ -9,4 +9,4 @@ import kotlinx.serialization.Serializable
  * @see ModelReturnProtocol
  */
 @Serializable
-data class ModelSendProtocol(val prompt:String, val token:String,val user: String, val history: ArrayList<UserHistory>)
+data class ModelSendProtocol(val prompt:String, val token:String,val user: String, val history: MutableList<UserHistory>)

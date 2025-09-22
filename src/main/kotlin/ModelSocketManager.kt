@@ -11,6 +11,7 @@ import io.ktor.util.logging.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
+import java.util.concurrent.ConcurrentHashMap
 
 object ModelSocketManager {
 
@@ -20,11 +21,12 @@ object ModelSocketManager {
     lateinit var client: HttpClient
     lateinit var session: DefaultClientWebSocketSession
 
-    val sessionRegisters = HashMap<String, RequestSession>()
+    val sessionRegisters = ConcurrentHashMap<String, RequestSession>()
 
     var receiving = false
 
     lateinit var logger: Logger
+
     fun initApplication(application: Application) {
         modelHost = application.environment.config.property("model.host").getString()
         modelPort = application.environment.config.property("model.port").getString()
@@ -49,7 +51,7 @@ object ModelSocketManager {
      */
     suspend fun registerSession(token: String, session: DefaultWebSocketServerSession) {
 
-        if (token !in sessionRegisters) {
+        if (sessionRegisters.containsKey(token)) {
             sessionRegisters[token] = RequestSession(session)
 
             logger.debug("Registered session for token '{}' with session {}", token, session)

@@ -170,7 +170,7 @@ fun Application.configureRouting() {
             val post = call.receiveParameters()
             val token = post["token"]
 
-            if(token in TokenManager.tokens){
+            if(TokenManager.tokens.containsKey(token)){
                 call.sessions.set(UserSession(token,System.currentTimeMillis()))
                 call.respondRedirect("/")
             }else{
