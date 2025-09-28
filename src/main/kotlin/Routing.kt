@@ -21,6 +21,7 @@ import io.ktor.util.cio.*
 import io.ktor.utils.io.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -76,6 +77,36 @@ fun Application.configureRouting() {
                 HistoryManager.clearHistory(call.getToken()!!)
                 call.respond("OK")
             }
+
+            post("/rescue"){
+                val session=ModelSocketManager.sessionRegisters[call.getToken()]
+                if(session==null){
+                    call.respond("未找到连接")
+                    return@post
+                }
+
+                if(session.status== RequestSession.RequestStatus.NO_QUESTION || session.status == RequestSession.RequestStatus.ENDED){
+                    call.respond("当前状态不需要救援")
+                    return@post
+                }
+                if(System.currentTimeMillis()-session.lastUpdated<1000*15){
+                    call.respond("好像没有卡住？请等待15秒后再试")
+                    return@post
+                }
+
+                session.status= RequestSession.RequestStatus.ENDED
+                session.endTime = System.currentTimeMillis()
+                StatisticManager.recordWaitTime(session.endTime - session.startTime)
+                session.answer+="……[已终止]"
+                session.send(Frame.Text("T……[已终止]"))
+                session.send(Frame.Text("E"))
+                HistoryManager.appendHistory(
+                    call.getToken()!!,
+                    UserHistory("bot", session.answer, System.currentTimeMillis())
+                )
+
+                call.respond("OK")
+            }
         }
 
 
@@ -93,6 +124,13 @@ fun Application.configureRouting() {
                 call.respond(FreeMarkerContent("session.ftl",getObjectMap().also {
                     it["sessions"]=ModelSocketManager.sessionRegisters.entries.toList()
                     it["currentTime"]=System.currentTimeMillis()
+                    try {
+                        it["serverSession"] = "Incoming Closed: ${ModelSocketManager.session.incoming.isClosedForReceive}, " +
+                                "Outgoing closed: ${ModelSocketManager.session.outgoing.isClosedForSend}, " +
+                                "Active: ${ModelSocketManager.session.isActive}"
+                    }catch(e: Exception){
+                        it["serverSession"] = "NOT CONNECTED!!!"
+                    }
                 }))
             }
             get("/token"){
@@ -179,7 +217,7 @@ fun Application.configureRouting() {
         }
 
         get("/logout"){
-            call.sessions.set<UserSession>(null)
+            call.sessions.clear<UserSession>()
             call.respondRedirect("/")
         }
 

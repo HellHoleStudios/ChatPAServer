@@ -35,6 +35,7 @@
     <div class="ui fluid input">
         <input type="text" id="prompt" placeholder="询问">
     </div>
+    <button class="ui basic button"  style="margin-top: 10px" onclick="stuck()">卡住了？点点我！</button> <br/>
 
     <div id="loading" style="margin-top: 20px">
         <div class="ui active inline loader"></div> <span id="loadingText">正在连接到服务器，现在请不要提问……</span>
@@ -82,6 +83,17 @@
         //     nonStandard: true
         // };
         // marked.use(markedKatex(options));
+
+        function stuck(){
+            $.post("/rescue",function(data){
+                $.toast({
+                    title: '🚑道路救援',
+                    message: data,
+                    showProgress: 'bottom',
+                    class: data==="OK" ? 'success' : "warning",
+                });
+            });
+        }
 
         function clearHistory(){
             $.post("/clearHistory",function(){

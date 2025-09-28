@@ -17,6 +17,11 @@ class RequestSession(var session: DefaultWebSocketServerSession) {
 
     enum class RequestStatus {
         NO_QUESTION,
+
+        /**
+         * Waiting is a state where the user's request is received and sent to the model,
+         * yet no returned tokens have been received.
+         */
         WAITING,
         RUNNING,
         LOST,
@@ -26,6 +31,11 @@ class RequestSession(var session: DefaultWebSocketServerSession) {
     var lastQuestion = ""
     var answer = ""
     var status = RequestStatus.NO_QUESTION
+
+    /**
+     * The last time the session was updated: new tokens, state changes, etc.
+     */
+    var lastUpdated = System.currentTimeMillis()
 
     /**
      * Start time of last query

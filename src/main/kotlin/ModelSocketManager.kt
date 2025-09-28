@@ -21,6 +21,9 @@ object ModelSocketManager {
     lateinit var client: HttpClient
     lateinit var session: DefaultClientWebSocketSession
 
+    /**
+     * This is not saved to disk
+     */
     val sessionRegisters = ConcurrentHashMap<String, RequestSession>()
 
     var receiving = false
@@ -79,7 +82,7 @@ object ModelSocketManager {
 
                 logger.debug("Refreshed session for token '{}' with session {}", token, session)
             } catch (e: Exception) {
-                logger.warn("Cannot refresh session for token '{}' with session {} {}", token, session, e)
+                logger.warn("Cannot refresh session for token '{}' with session {} ", token, session)
             }
         }
     }
@@ -112,11 +115,13 @@ object ModelSocketManager {
                 try {
                     if (ret.type == "GEN_STARTED") {
                         s.status = RequestSession.RequestStatus.RUNNING
+                        s.lastUpdated = System.currentTimeMillis()
                         s.answer =""
 
                         s.send(Frame.Text("S"))
                     } else if (ret.type == "NEW_TOKEN") {
                         s.answer += ret.generated_token
+                        s.lastUpdated = System.currentTimeMillis()
                         StatisticManager.incToken(ret.token)
 
                         s.send(Frame.Text("T" + ret.generated_token))
@@ -212,7 +217,12 @@ object ModelSocketManager {
             return false
         }
 
-        sendSerialized(message)
+        try {
+            sendSerialized(message)
+        }catch(_: UninitializedPropertyAccessException){
+            s.close(CloseReason(CloseReason.Codes.INTERNAL_ERROR, "模型连接未初始化，请联系管理员"))
+            return true //early return to prevent double close
+        }
 
         StatisticManager.incRequest(message.token)
 

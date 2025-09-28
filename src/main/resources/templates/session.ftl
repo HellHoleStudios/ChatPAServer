@@ -1,5 +1,6 @@
 <#import "template.ftl" as layout>
 <@layout.main pageTitle="Session">
+    <p>模型端连接状态：${serverSession}</p>
     <div class="ui fluid styled accordion" id="ac">
         <#list sessions as session>
             <div class="title" style="min-height: 30px">
