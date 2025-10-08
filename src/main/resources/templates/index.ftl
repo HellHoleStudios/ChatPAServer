@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <div class="ui comments" id="comments" style="max-width: 100%; max-height: 500px; overflow: scroll; ">
+    <div class="ui comments" id="comments" style="max-width: 100%; max-height: 500px; overflow-y: scroll; overflow-x: hidden;">
 
     </div>
 

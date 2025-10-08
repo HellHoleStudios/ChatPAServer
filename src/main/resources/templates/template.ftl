@@ -6,29 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="AI Assistant for PA remastered">
     <title>${pageTitle} - ChatCode</title>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="/static/external/jquery.min.js"></script>
 
     <!-- Semantic -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"></script>
+    <link rel="stylesheet" href="/static/external/semantic.min.css">
+    <script src="/static/external/semantic.min.js"></script>
 
     <!-- Marked -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked-highlight/lib/index.umd.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked-alert@2.1.2/dist/index.umd.min.js"></script>
-<#--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css" crossorigin="anonymous">-->
-<#--    <script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js" crossorigin="anonymous"></script>-->
+    <script src="/static/external/marked.min.js"></script>
+    <script src="/static/external/marked.umd.js"></script>
+    <script src="/static/external/index.umd.js"></script>
+    <script src="/static/external/index.umd.min.js"></script>
+<#--    <link rel="stylesheet" href="/static/external/katex.min.css" crossorigin="anonymous">-->
+<#--    <script src="/static/external/katex.min.js" crossorigin="anonymous"></script>-->
 <#--    <script src="https://cdn.jsdelivr.net/npm/marked-katex-extension/lib/index.umd.js"></script>-->
 
     <!-- Highlight.js -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/default.min.css">
-    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+    <link rel="stylesheet" href="/static/external/default.min.css">
+    <script src="/static/external/highlight.min.js"></script>
 
     <!-- MarkMap -->
-    <script src="https://cdn.jsdelivr.net/npm/markmap-lib"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markmap-view"></script>
+    <script src="/static/external/markmap-lib.js"></script>
+    <script src="/static/external/d3@7.js"></script>
+    <script src="/static/external/markmap-view.js"></script>
     <script>
         const { Transformer } = window.markmap;
         const { markmap } = window;

@@ -36,3 +36,4 @@ out/
 .vscode/
 /.sessions
 /history
+/src/main/resources/static/external
