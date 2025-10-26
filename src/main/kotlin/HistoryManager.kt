@@ -57,6 +57,6 @@ object HistoryManager {
     }
 
     //TODO: config this
-    const val USER_HISTORY_SIZE_THRESHOLD = 10
-
+    const val USER_HISTORY_SIZE_THRESHOLD = 1000
+    const val CONTEXT_THRESHOLD = 10*2
 }

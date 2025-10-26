@@ -71,7 +71,7 @@ fun Application.configureSockets() {
                                     text,
                                     token,
                                     username,
-                                    HistoryManager.getUserHistory(token).toMutableList()
+                                    HistoryManager.getUserHistory(token).takeLast(HistoryManager.CONTEXT_THRESHOLD)
                                 )
                             )
                             if (!ans) {

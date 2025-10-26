@@ -40,6 +40,7 @@ object ModelSocketManager {
             }
         }
 
+
         this.logger=application.log
     }
 
@@ -199,7 +200,7 @@ object ModelSocketManager {
         }
 
         s.summaryLock=true
-        sendSerialized(ModelSummaryProtocol(true,token,HistoryManager.getUserHistory(token).toMutableList()))
+        sendSerialized(ModelSummaryProtocol(true,token,HistoryManager.getUserHistory(token).takeLast(HistoryManager.CONTEXT_THRESHOLD)))
 
         return true
     }

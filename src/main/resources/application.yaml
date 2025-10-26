@@ -7,10 +7,12 @@ ktor:
 
     development: true
 
+#model:
+#    host: "114.212.10.249"
+#    port: "8501"
 model:
-    host: "114.212.10.249"
-    port: "8501"
-
+  host: "localhost"
+  port: "8081"
 token:
     admin: "admin"
 
